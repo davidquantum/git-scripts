@@ -1,0 +1,19 @@
+#!/bin/bash
+
+WI=$(git branch | grep '*' | sed -r 's/[^0-9]*([0-9]+).*/\1/')
+
+if echo "$WI" | grep -E '[0-9]+' > /dev/null
+then
+	# test if any line starts with # - if true, it is interactive mode for editing comments
+	if cat "$1" | grep -E '^#' > /dev/null
+	then
+		# Prepare the file with prepended Related Work Items
+		original=$(cat "$1")
+		echo -e "$2\n\nRelated Work Items: #$WI\n$original" > "$1"
+
+	else
+		# Only append the Related Work Items
+		original=$(cat "$1")
+		echo -e "$original\n\nRelated Work Items: #$WI\n" > "$1"
+	fi
+fi
